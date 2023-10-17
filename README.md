@@ -1,2 +1,2 @@
-# spring-rest-msr
-Aprendizado de Spring e REST API com AlgaWorks-MSR
+# Servidor de Tarefas TCP
+Aprendizado avançado utilizando Threads.
