@@ -12,26 +12,25 @@ public class TaskClient {
         Socket socket = new Socket("localhost", 12345);
         System.out.println("--- Conexão Estabelecida ---");
 
-        Thread threadOut = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    PrintStream exit = new PrintStream(socket.getOutputStream());
-                    Scanner keyboard = new Scanner(System.in);
+        Thread threadOut = new Thread(() -> {
+            try {
+                PrintStream exit = new PrintStream(socket.getOutputStream());
+                Scanner keyboard = new Scanner(System.in);
 
-                    while (keyboard.hasNextLine()) {
-                        String line = keyboard.nextLine();
+                while (keyboard.hasNextLine()) {
+                    String line = keyboard.nextLine();
 
-                        if (line.trim().equals(""))
-                            break;
-
+                    if (line.trim().equals("fim")) {
                         exit.println(line);
+                        break;
                     }
-                    exit.close();
-                    keyboard.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    exit.println(line);
+
                 }
+                exit.close();
+                keyboard.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
 
