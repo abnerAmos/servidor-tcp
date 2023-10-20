@@ -25,7 +25,6 @@ public class TaskClient {
                         break;
                     }
                     exit.println(line);
-
                 }
                 exit.close();
                 keyboard.close();

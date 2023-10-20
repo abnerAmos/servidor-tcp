@@ -6,8 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TaskServer {
@@ -15,12 +14,22 @@ public class TaskServer {
     private ExecutorService threadPool;
     private ServerSocket server;
     private AtomicBoolean running;
+    private BlockingQueue<String> queue;
 
     public TaskServer() throws IOException {
         System.out.println("--- Iniciando Servidor ---");
         this.server = new ServerSocket(12345);
         this.threadPool = Executors.newCachedThreadPool();  // Cresce e diminui dinâmicamente
         this.running = new AtomicBoolean(true);
+        this.queue = new ArrayBlockingQueue<>(2);
+        initConsumers();
+    }
+
+    private void initConsumers() {
+        for (int i = 0; i < 2; i++) {
+            TaskConsumer consumer = new TaskConsumer(queue);
+            this.threadPool.execute(consumer);
+        }
     }
 
     public void init() throws IOException {
